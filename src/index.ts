@@ -3,7 +3,7 @@ import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import cors from "@koa/cors";
 import { AppDataSource } from "./database/data-source";
-// import router from "./routes";
+import router from "./routes";
 
 const app = new Koa();
 
@@ -21,8 +21,8 @@ app.use(cors());
 app.use(bodyParser());
 
 // Routes
-// app.use(router.routes());
-// app.use(router.allowedMethods());
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 const PORT = process.env.PORT ?? 3000;
 
