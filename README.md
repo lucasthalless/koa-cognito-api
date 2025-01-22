@@ -45,7 +45,7 @@ AWS_REGION=us-east-1
 COGNITO_USER_POOL_ID=seu-user-pool-id
 COGNITO_CLIENT_ID=seu-client-id
 ```
-(Para fim de exemplo, deixei credenciais de um Cognito para teste meu no `.env`!)
+(Para fim de teste, deixei credenciais de um Cognito meu no `.env`!)
 
 3. Inicie os containers:
 ```bash
