@@ -45,7 +45,7 @@ AWS_REGION=us-east-1
 COGNITO_USER_POOL_ID=seu-user-pool-id
 COGNITO_CLIENT_ID=seu-client-id
 ```
-(Para fim de teste, deixei credenciais de um Cognito meu no `.env`!)
+(Para fim de teste, já deixei credenciais de um Cognito meu no `.env`!)
 
 3. Inicie os containers:
 ```bash
@@ -58,6 +58,7 @@ docker-compose up -d
 
 #### POST /auth
 Rota pública para login/registro de usuários.
+Após autenticar seu usuário nessa rota, serão retornadas as informações do seu usuário e os tokens para acessar o resto das rotas da aplicação. Na collection do postman fornecida, caso ele não faça o set do token automaticamente e as próximas requests retornarem um erro de token inválido, copie o accessToken que foi retornado na primeira chamada e cole no header "authorization", seguindo o formato "Bearer {{tokenCopiado}}".
 
 **Request Body:**
 ```json
