@@ -88,7 +88,7 @@ Rota protegida para obter informações do usuário autenticado.
 
 **Headers:**
 ```
-Authorization: Bearer <token-jwt>
+authorization: Bearer <token-jwt>
 ```
 
 **Response (200):**
@@ -107,11 +107,11 @@ Authorization: Bearer <token-jwt>
 ### Edição de Conta
 
 #### PUT /edit-account
-Rota protegida para atualizar informações do usuário.
+Rota protegida para atualizar informações do usuário. Após atualizar informações, a flag de isOnboarded se torna `true`
 
 **Headers:**
 ```
-Authorization: Bearer <token-jwt>
+authorization: Bearer <token-jwt>
 ```
 
 **Request Body (Usuário comum):**
@@ -136,7 +136,7 @@ Rota protegida, acessível apenas para administradores.
 
 **Headers:**
 ```
-Authorization: Bearer <token-jwt>
+authorization: Bearer <token-jwt>
 ```
 
 **Response (200):**
