@@ -17,17 +17,28 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"const response = pm.response.json();",
+									"",
 									"pm.test('Status code is 200', function() {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
 									"pm.test('Response has user object', function() {",
-									"    const response = pm.response.json();",
 									"    pm.expect(response.user).to.be.an('object');",
 									"    pm.expect(response.user.email).to.eql(pm.variables.get('userEmail'));",
+									"    pm.expect(response.user.name).to.eql(pm.variables.get('userName'));",
+									"});",
+									"",
+									"pm.test('Response has tokens', function() {",
+									"    pm.expect(response.tokens).to.be.an('object');",
+									"});",
+									"",
+									"pm.test(\"Set authToken environment variable\", function () {",
+									"    pm.environment.set(\"authToken\", response.tokens.accessToken)",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -36,7 +47,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{userName}}\"\n}",
+							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{userName}}\",\n    \"role\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,6 +64,70 @@
 							]
 						},
 						"description": "Rota que serve como signInOrRegister, onde verifica se o usuário já existe e se não existir cria no banco de dados."
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User Informations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has expected properties\", function () {",
+									"  var jsonData = pm.response.json();",
+									"  pm.expect(jsonData).to.have.property(\"user\");",
+									"  pm.expect(jsonData.user).to.have.property(\"name\", \"Test User New Name\");",
+									"  pm.expect(jsonData.user).to.have.property(\"email\", \"test@example.com\");",
+									"  pm.expect(jsonData.user).to.have.property(\"role\", \"admin\");",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 2000ms\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer {{authToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{newUserName}}\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/edit-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"edit-account"
+							]
+						},
+						"description": "Usuários com escopo de admin, poderão alterar as informações de nome e role, enquanto os usuários com escopo de usuário somente poderão alterar o seu nome. Após alterar o nome, a flag de isOnboarded é modificada para true."
 					},
 					"response": []
 				},
@@ -101,7 +176,7 @@
 			"description": "Após autenticar seu usuário na rota _/auth_, serão retornadas as informações do seu usuário e os tokens para acessar o resto das rotas da aplicação."
 		},
 		{
-			"name": "/users",
+			"name": "Get Users",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -128,44 +203,6 @@
 				"description": "Rota protegida para ser acessada apenas por usuários com escopo de admin, essa rota retorna todos os usuários cadastrados no banco."
 			},
 			"response": []
-		},
-		{
-			"name": "/edit-account",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "PUT",
-				"header": [
-					{
-						"key": "authorization",
-						"value": "Bearer {{authToken}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{userName}}\",\n    \"role\": \"admin\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/edit-account",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"edit-account"
-					]
-				},
-				"description": "Usuários com escopo de admin, poderão alterar as informações de nome e role, enquanto os usuários com escopo de usuário somente poderão alterar o seu nome. Após alterar o nome, a flag de isOnboarded é modificada para true."
-			},
-			"response": []
 		}
 	],
 	"variable": [
@@ -184,6 +221,11 @@
 		{
 			"key": "authToken",
 			"value": ""
+		},
+		{
+			"key": "newUserName",
+			"value": "",
+			"type": "default"
 		}
 	]
 }
