@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20.15.0-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm i
 
 # Copy source code
 COPY . .
@@ -15,21 +15,21 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine
+# # Production stage
+# FROM node:20.15.0-alpine
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 
-# Copy package files
-COPY package*.json ./
+# # Copy package files
+# COPY package*.json ./
 
-# Install production dependencies only
-RUN npm ci --production
+# # Install production dependencies only
+# RUN npm i --production
 
-# Copy built files from builder stage
-COPY --from=builder /usr/src/app/dist ./dist
+# # Copy built files from builder stage
+# COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy env files if needed
+# # Copy env files if needed
 COPY .env* ./
 
 EXPOSE 3000
