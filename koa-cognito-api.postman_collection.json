@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "f944d1df-b1c8-4e2f-b695-62a0d470e131",
+		"name": "Koa Cognito API",
+		"description": "Documentação: [https://github.com/lucasthalless/koa-cognito-api/blob/main/README.md](https://github.com/lucasthalless/koa-cognito-api/blob/main/README.md)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23882754"
+	},
+	"item": [
+		{
+			"name": "Authentication Flow",
+			"item": [
+				{
+					"name": "Register/Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has user object', function() {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.user).to.be.an('object');",
+									"    pm.expect(response.user.email).to.eql(pm.variables.get('userEmail'));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{userName}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						},
+						"description": "Rota que serve como signInOrRegister, onde verifica se o usuário já existe e se não existir cria no banco de dados."
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has user data', function() {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response.user).to.be.an('object');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "Resgata as informações de um usuário. Rota protegida pelo token JWT do Cognito."
+					},
+					"response": []
+				}
+			],
+			"description": "Após autenticar seu usuário na rota _/auth_, serão retornadas as informações do seu usuário e os tokens para acessar o resto das rotas da aplicação."
+		},
+		{
+			"name": "/users",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Rota protegida para ser acessada apenas por usuários com escopo de admin, essa rota retorna todos os usuários cadastrados no banco."
+			},
+			"response": []
+		},
+		{
+			"name": "/edit-account",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"name\": \"{{userName}}\",\n    \"role\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/edit-account",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"edit-account"
+					]
+				},
+				"description": "Usuários com escopo de admin, poderão alterar as informações de nome e role, enquanto os usuários com escopo de usuário somente poderão alterar o seu nome. Após alterar o nome, a flag de isOnboarded é modificada para true."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "userEmail",
+			"value": "test@example.com"
+		},
+		{
+			"key": "userName",
+			"value": "Test User"
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		}
+	]
+}
