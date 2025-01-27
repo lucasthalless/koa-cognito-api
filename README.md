@@ -2,7 +2,12 @@
 
 API RESTful construída com KoaJS, TypeScript, TypeORM e integração com AWS Cognito para autenticação.
 
-## 🛠 Tecnologias Utilizadas
+## 🚧 Em desenvolvimento
+
+- Testes unitários e E2E
+- Env com variáveis de ambiente encriptadas
+
+## 🛠 Tecnologias utilizadas
 
 - Node.js
 - TypeScript
@@ -12,7 +17,7 @@ API RESTful construída com KoaJS, TypeScript, TypeORM e integração com AWS Co
 - AWS Cognito
 - Docker & Docker Compose
 
-## 🚀 Como Executar
+## 🚀 Como executar
 
 ### Pré-requisitos
 
@@ -20,7 +25,7 @@ API RESTful construída com KoaJS, TypeScript, TypeORM e integração com AWS Co
 - Docker Compose
 - AWS Cognito User Pool configurado
 
-### Configuração do Ambiente
+### Configuração do ambiente
 
 1. Clone o repositório:
 ```bash
@@ -105,7 +110,7 @@ authorization: Bearer <token-jwt>
 }
 ```
 
-### Edição de Conta
+### Edição de conta
 
 #### PUT /edit-account
 Rota protegida para atualizar informações do usuário. Após atualizar informações, a flag de isOnboarded se torna `true`
@@ -175,7 +180,7 @@ npm run test:e2e
 npm run test:coverage
 ```
 
-## 📦 Comandos Docker Úteis
+## 📦 Comandos docker úteis
 
 ```bash
 # Iniciar os containers
@@ -194,7 +199,7 @@ docker-compose up -d --build
 docker-compose down -v
 ```
 
-## 🔍 Monitoramento e Logs
+## 🔍 Monitoramento e logs
 
 Os logs da aplicação podem ser visualizados com:
 ```bash
@@ -208,7 +213,7 @@ docker-compose logs -f api
 docker-compose logs -f postgres
 ```
 
-## 📝 Notas Importantes
+## 📝 Notas importantes
 
 - As rotas protegidas requerem um token JWT válido do Cognito
 - O banco de dados é persistido em um volume Docker
