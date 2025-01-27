@@ -4,7 +4,6 @@ API RESTful construída com KoaJS, TypeScript, TypeORM e integração com AWS Co
 
 ## 🚧 Em desenvolvimento
 
-- Testes unitários e E2E
 - Env com variáveis de ambiente encriptadas
 
 ## 🛠 Tecnologias utilizadas
