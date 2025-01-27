@@ -2,7 +2,6 @@ import {
   AdminCreateUserCommand,
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
-  RespondToAuthChallengeCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 import Router from "@koa/router";
 import { Context } from "koa";
