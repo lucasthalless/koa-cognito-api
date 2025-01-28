@@ -68,7 +68,7 @@ Após autenticar seu usuário nessa rota, serão retornadas as informações do 
 ```json
 {
     "email": "usuario@exemplo.com",
-    "name": "Nome do Usuário"
+    "name": "username"
 }
 ```
 
@@ -78,7 +78,7 @@ Após autenticar seu usuário nessa rota, serão retornadas as informações do 
     "user": {
         "id": "uuid",
         "email": "usuario@exemplo.com",
-        "name": "Nome do Usuário",
+        "name": "username",
         "role": "user",
         "isOnboarded": false,
         "createdAt": "2025-01-21T..."
@@ -102,7 +102,7 @@ authorization: Bearer <token-jwt>
     "user": {
         "id": "uuid",
         "email": "usuario@exemplo.com",
-        "name": "Nome do Usuário",
+        "name": "username",
         "role": "user",
         "isOnboarded": true
     }
@@ -122,14 +122,14 @@ authorization: Bearer <token-jwt>
 **Request Body (Usuário comum):**
 ```json
 {
-    "name": "Novo Nome"
+    "name": "newusername"
 }
 ```
 
 **Request Body (Admin):**
 ```json
 {
-    "name": "Novo Nome",
+    "name": "newusername",
     "role": "admin"
 }
 ```
@@ -151,7 +151,7 @@ authorization: Bearer <token-jwt>
         {
             "id": "uuid",
             "email": "usuario@exemplo.com",
-            "name": "Nome do Usuário",
+            "name": "username",
             "role": "user",
             "isOnboarded": true
         }
