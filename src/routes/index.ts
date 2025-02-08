@@ -29,11 +29,9 @@ const cognitoClient = new CognitoIdentityProviderClient({
   },
 });
 
-// Public route for authentication
 router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
   const { email, name, role } = ctx.request.body as AuthRequest;
 
-  // Validate required fields
   if (!email || !name || !role) {
     ctx.status = 400;
     ctx.body = { error: "Email, name and role are required" };
@@ -59,7 +57,6 @@ router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
       name
     );
 
-    // Tentar criar usuário no Cognito
     try {
       const createUserCommand = new AdminCreateUserCommand({
         UserPoolId: process.env.COGNITO_USER_POOL_ID,
@@ -74,7 +71,6 @@ router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
 
       await cognitoClient.send(createUserCommand);
 
-      // Autenticar para obter tokens
       const authCommand = new InitiateAuthCommand({
         AuthFlow: "USER_PASSWORD_AUTH",
         ClientId: clientId,
@@ -87,7 +83,6 @@ router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
 
       const authResult = await cognitoClient.send(authCommand);
 
-      // Retornar tokens e informações do usuário
       ctx.body = {
         user: {
           id: user.id,
@@ -103,7 +98,6 @@ router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
         },
       };
     } catch (cognitoError) {
-      // Se o usuário já existir no Cognito, apenas autenticar
       if (cognitoError.name === "UsernameExistsException") {
         const authCommand = new InitiateAuthCommand({
           AuthFlow: "USER_PASSWORD_AUTH",
@@ -154,7 +148,6 @@ router.post("/auth", validateBody(AuthRequestDTO), async (ctx: Context) => {
   }
 });
 
-// Protected route for user profile
 router.get("/me", authMiddleware, async (ctx: Context) => {
   const user = await userRepository.findOne({
     where: { email: ctx.state.user.email },
@@ -169,7 +162,6 @@ router.get("/me", authMiddleware, async (ctx: Context) => {
   ctx.body = { user };
 });
 
-// Protected route for account editing
 router.put(
   "/edit-account",
   authMiddleware,
@@ -206,7 +198,6 @@ router.put(
   }
 );
 
-// Admin only route for listing users
 router.get("/users", authMiddleware, adminOnly, async (ctx: Context) => {
   const users = await userRepository.find();
   ctx.body = { users };

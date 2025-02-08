@@ -7,7 +7,6 @@ import router from "./routes";
 
 const app = new Koa();
 
-// Initialize database connection
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
@@ -16,11 +15,9 @@ AppDataSource.initialize()
     console.error("Error during Data Source initialization:", err);
   });
 
-// Middlewares
 app.use(cors());
 app.use(bodyParser());
 
-// Routes
 app.use(router.routes());
 app.use(router.allowedMethods());
 
